@@ -2,7 +2,7 @@ import Order from "../model/orderModel.js";
 
 export async function getAllOrders(req, res) {
   try {
-    const allOrders = await find();
+    const allOrders = await Order.find();
     res.status(200).json(allOrders);
   } catch (error) {
     console.error(error);
