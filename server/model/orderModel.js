@@ -1,43 +1,31 @@
 import { Schema, model } from "mongoose";
 
-const orderSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+const orderSchema = Schema({
+  userName: { type: String, required: true }, 
+  userId: { type: Number, required: true },
   items: [
     {
-      productName: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-      },
+      name: { type: String, required: true },
+      image: { type: String, required: true },
+      model: { type: String, required: true },
+      price: { type: Number, required: true },
+      description: { type: String, required: true },
+      brand: { type: String, required: true },
+      material: { type: String, required: true },
+      color: { type: String, required: true },
+      sareelength: { type: String, required: true },
+      weight: { type: String, required: true },
+      dimensions: { type: String, required: true },
+      blousestitching: { type: String, required: true },
+      wash: { type: String, required: true }
     },
   ],
-  orderId:{
-    type:String,
-    required:true
-  },
-  orderDate: {
-    type: Date,
-    default: Date.now,
-  },
-  deliveryDate: {
-    type: Date,
-  },
-  orderId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  orderId: { type: String, required: true },
+  date: { type: Date, required: true },
+  status: { type: String, required: true },
+  address: { type: String, required: true },
+  totalPrice: { type: Number, required: true },
 });
 
-const Order = model("Order", orderSchema);
-
-export default Order;
-
+const Orders = model("Orders", orderSchema);
+export default Orders

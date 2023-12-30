@@ -43,9 +43,12 @@ router.post("/purekanjivaramsilk",purekanjivaramsilk.createpurekanjivaramsilk)
 router.get("/getpurekanjivaramsilk",purekanjivaramsilk.getpurekanjivaramsilk)
 
 //order
-router.post("/postorder",orders.createOrder)
-router.get("/getorder",orders.getorder)
-router.delete("/deleteorder/:orderId",orders.deleteOrder)
+router.post("/createOrder",orders.createOrder)
+router.get("/addItemToOrder/:orderId",orders.addItemToOrder)
+router.get("/getAllOrders",orders.getorder)
+router.get("/update/:orderId",orders.updateOrder)
+router.get("/update/:id",orders.updateOrder)
+router.delete("/deleteOrder/:id'",orders.deleteOrder)
 
 //login
 router.post("/signup",signupu.createsignup)
