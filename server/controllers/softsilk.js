@@ -16,7 +16,6 @@ const SoftSilks = {
     try {
         const {
             name,
-            image,
             model,
             price,
             description,
@@ -26,8 +25,8 @@ const SoftSilks = {
             sareelength,
             weight,
             dimensions,
-            // blousestitching,
-            wash
+            wash,
+            image
         } = req.body;
 
         if (!image || !price || !name || !model || !brand || !description || !material || !color || !sareelength || !weight || !dimensions || !wash) {
@@ -36,7 +35,6 @@ const SoftSilks = {
 
         const newSoftsilk = new SoftSilk({
             name,
-            image,
             model,
             price,
             description,
@@ -46,8 +44,8 @@ const SoftSilks = {
             sareelength,
             weight,
             dimensions,
-            // blousestitching,
-            wash
+            wash,
+            image
         });
         const saved = await newSoftsilk.save();
 

@@ -5,10 +5,6 @@ const Newarrivals = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
-        type: [String],
-        required: true
-    },
     model: {
         type: String,
         required: true
@@ -45,12 +41,12 @@ const Newarrivals = new mongoose.Schema({
         type: String,
         required: true
     },
-    // blousestitching: {
-    //     type: String,
-    //     required: true
-    // },
     wash: {
         type: String,
+        required: true
+    },
+    image: {
+        type: [String],
         required: true
     }
 });

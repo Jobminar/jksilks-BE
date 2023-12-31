@@ -14,7 +14,6 @@ const lightweightpattu = {
     try {
         const {
             name,
-            image,
             model,
             price,
             description,
@@ -24,8 +23,8 @@ const lightweightpattu = {
             sareelength,
             weight,
             dimensions,
-            // blousestitching,
-            wash
+            wash,
+            image
         } = req.body;
 
         if (!image || !price || !name || !model || !brand || !description || !material || !color || !sareelength || !weight || !dimensions || !wash) {
@@ -34,7 +33,6 @@ const lightweightpattu = {
 
         const newLightweight = new Lightweightpattu({
             name,
-            image,
             model,
             price,
             description,
@@ -44,8 +42,8 @@ const lightweightpattu = {
             sareelength,
             weight,
             dimensions,
-            // blousestitching,
-            wash
+            wash,
+            image
         });
         const saved = await newLightweight.save();
 

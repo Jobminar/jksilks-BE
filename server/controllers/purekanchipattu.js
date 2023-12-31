@@ -16,7 +16,6 @@ const Purekanchipattu = {
     try {
         const {
             name,
-            image,
             model,
             price,
             description,
@@ -26,8 +25,8 @@ const Purekanchipattu = {
             sareelength,
             weight,
             dimensions,
-            // blousestitching,
-            wash
+            wash,
+            image
         } = req.body;
 
         if (!image || !price || !name || !model || !brand || !description || !material || !color || !sareelength || !weight || !dimensions || !wash) {
@@ -36,7 +35,6 @@ const Purekanchipattu = {
 
         const newpurekanchipattu = new Purekanchi({
             name,
-            image,
             model,
             price,
             description,
@@ -46,8 +44,8 @@ const Purekanchipattu = {
             sareelength,
             weight,
             dimensions,
-            // blousestitching,
-            wash
+            wash,
+            image
         });
         const saved = await newpurekanchipattu.save();
 

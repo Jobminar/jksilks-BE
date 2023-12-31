@@ -6,7 +6,6 @@ const orderSchema = Schema({
   items: [
     {
       name: { type: String, required: true },
-      image: { type: [String], required: true },
       model: { type: String, required: true },
       price: { type: Number, required: true },
       description: { type: String, required: true },
@@ -16,8 +15,8 @@ const orderSchema = Schema({
       sareelength: { type: String, required: true },
       weight: { type: String, required: true },
       dimensions: { type: String, required: true },
-      // blousestitching: { type: String, required: true },
-      wash: { type: String, required: true }
+      wash: { type: String, required: true },
+      image: { type: [String], required: true },
     },
   ],
   orderId: { type: String, required: true },
