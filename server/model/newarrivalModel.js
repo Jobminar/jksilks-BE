@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Purekanchi = new mongoose.Schema({
+const Newarrivals = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -55,6 +55,6 @@ const Purekanchi = new mongoose.Schema({
     }
 });
 
-const PureKanchipattu = mongoose.model('PureKanchipattu', Purekanchi);
+const Newarrival = mongoose.model('NewArrivals', Newarrivals);
 
-export default PureKanchipattu;
+export default Newarrival;

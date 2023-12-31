@@ -1,18 +1,18 @@
-import Exclusive from "../model/exclusivebridalModel.js";
+import Newarrivalschema from "../model/newarrivalModel.js";
 
 
 
-const exclusivebridalwear = {
-    getexclusivebridalwear: async (req, res) => {
+const newarrival = {
+    getnewarrival: async (req, res) => {
       try {
-        const customers = await Exclusive.find();
+        const customers = await Newarrivalschema.find();
         res.status(200).json(customers);
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
     },
 
-    createexclusivebridalwear:[async (req, res) => {
+    createnewarrival:[async (req, res) => {
     try {
         const {
             name,
@@ -34,7 +34,7 @@ const exclusivebridalwear = {
             return res.status(400).send("Please add all the fields");
         }
 
-        const newexclusive = new Exclusive({
+        const newArrival = new Newarrivalschema({
             name,
             image,
             model,
@@ -49,7 +49,7 @@ const exclusivebridalwear = {
             // blousestitching,
             wash
         });
-        const saved = await newexclusive.save();
+        const saved = await newArrival.save();
 
         res.status(201).json(saved);
 
@@ -60,4 +60,4 @@ const exclusivebridalwear = {
 }]
 }
 
-export default exclusivebridalwear
+export default newarrival

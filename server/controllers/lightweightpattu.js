@@ -24,11 +24,11 @@ const lightweightpattu = {
             sareelength,
             weight,
             dimensions,
-            blousestitching,
+            // blousestitching,
             wash
         } = req.body;
 
-        if (!image || !price || !name || !model || !brand || !description || !material || !color || !sareelength || !weight || !dimensions || !blousestitching || !wash) {
+        if (!image || !price || !name || !model || !brand || !description || !material || !color || !sareelength || !weight || !dimensions || !wash) {
             return res.status(400).send("Please add all the fields");
         }
 
@@ -44,7 +44,7 @@ const lightweightpattu = {
             sareelength,
             weight,
             dimensions,
-            blousestitching,
+            // blousestitching,
             wash
         });
         const saved = await newLightweight.save();

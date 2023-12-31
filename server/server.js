@@ -19,6 +19,8 @@ app.use(cors());
 app.use(json());
 app.use("/", router);
 
+
+
 app.post('/signup', async (req, res) => {
   try {
     const { username, email, password, whatsapp } = req.body;

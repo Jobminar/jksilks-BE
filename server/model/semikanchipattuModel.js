@@ -6,7 +6,7 @@ const Semikanchi = new mongoose.Schema({
         required: true
     },
     image: {
-        type: String,
+        type: [String],
         required: true
     },
     model: {
@@ -45,10 +45,10 @@ const Semikanchi = new mongoose.Schema({
         type: String,
         required: true
     },
-    blousestitching: {
-        type: String,
-        required: true
-    },
+    // blousestitching: {
+    //     type: String,
+    //     required: true
+    // },
     wash: {
         type: String,
         required: true

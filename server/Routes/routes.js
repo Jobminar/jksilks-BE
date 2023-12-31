@@ -9,6 +9,7 @@ import purekanjivaramsilk from "../controllers/purekanjivaramsilk.js"
 import orders from "../controllers/orders.js"
 import signupu from "../controllers/signup.js"
 import login from "../controllers/login.js"
+import newarrival from "../controllers/newarrival.js"
 
 const router = express.Router();
 
@@ -25,6 +26,10 @@ router.get("/getsemikanchipattu",semikanchipattu.getsemikanchipattu);
 //Light weight pattu
 router.post("/lightweightpattu",lightweightpattu.createlightweightpattu)
 router.get("/getlightweightpattu",lightweightpattu.getlightweightpattu)
+
+//New Arrival
+router.post("/newarrival",newarrival.createnewarrival)
+router.get("/getnewarrival",newarrival.getnewarrival)
 
 //Soft Silks
 router.post("/softsilk",softsilk.createsoftsilk)
@@ -53,6 +58,6 @@ router.delete("/deleteOrder/:id'",orders.deleteOrder)
 //login
 router.post("/signup",signupu.createsignup)
 router.post("/login",login.createlogin)
-// router.delete("/deleteorder/:orderId",orders.deleteOrder)
+
 
 export default router;
