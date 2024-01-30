@@ -163,8 +163,8 @@ const deleteItem = async (req, res) => {
         .json({ success: false, message: "Item not found" });
     }
 
-    // Delete the item
-    await existingItem.delete();
+    // Use remove method to delete the item
+    await existingItem.remove();
 
     res
       .status(200)
