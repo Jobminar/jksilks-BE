@@ -1,16 +1,40 @@
+// userAddressModel.js
 import { Schema, model } from "mongoose";
 
-const selectAddressSchema = new Schema({
-  title: String,
-  apartments: String,
-  address: String,
-  city: String,
-  streetNoOrName: String,
-  state: String,
-  country: String,
-  PINCODE: String,
+const userAddressSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  houseNumber: {
+    type: Number,
+    required: true,
+  },
+  street: {
+    type: String,
+    required: true,
+  },
+  landmark: {
+    type: String,
+  },
 });
 
-const SelectAddressModel = model("SelectAddress", selectAddressSchema);
+const UserAddress = model("UserAddress", userAddressSchema);
 
-export default SelectAddressModel;
+export default UserAddress;

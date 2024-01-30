@@ -28,17 +28,18 @@ const addItem = async (req, res) => {
       }
 
       const {
-        category,
         itemname,
+        price,
+        code,
+        stitchingOptions,
+        fabric,
+        washCare,
+        length,
         description,
-        units,
-        costPerUnit,
-        discount,
-        quantity,
       } = req.body;
 
       // Validate required fields
-      if (!category || !itemname || !units || !costPerUnit || !quantity) {
+      if (!itemname || !price || !code) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
@@ -50,13 +51,14 @@ const addItem = async (req, res) => {
       }
 
       const newItem = {
-        category,
         itemname,
+        price,
+        code,
+        stitchingOptions,
+        fabric,
+        washCare,
+        length,
         description,
-        units,
-        costPerUnit,
-        discount,
-        quantity,
         itemImage: itemImage ? itemImage.buffer.toString("base64") : "",
       };
 

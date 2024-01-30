@@ -1,127 +1,110 @@
-// Import required modules
-import CartModel from "../models/CartModel.js";
+import Cart from "../models/CartModel.js";
 
-// Create controller functions
-const addToCart = async (req, res) => {
-  try {
-    const { userId, productId, quantity } = req.body;
+const cartController = {
+  addToCart: async (req, res) => {
+    try {
+      // Extract data from the request body
+      const {
+        userId,
+        itemName,
+        price,
+        code,
+        stitchingOptions,
+        fabric,
+        washCare,
+        length,
+        quantity,
+      } = req.body;
 
-    // Check if the cart already exists for the user
-    let cart = await CartModel.findOne({ userId });
+      // Basic validation - check if required fields are present
+      if (!userId || !itemName || !price || !code || !quantity) {
+        return res
+          .status(400)
+          .json({ message: "Invalid request. Missing required fields." });
+      }
 
-    if (!cart) {
-      // If no cart, create a new one
-      cart = new CartModel({ userId, items: [] });
+      // Find the user's cart or create one if it doesn't exist
+      let cart = await Cart.findOne({ userId });
+
+      if (!cart) {
+        cart = new Cart({
+          userId,
+          items: [],
+        });
+      }
+
+      // Check if the item is already in the cart
+      const existingItemIndex = cart.items.findIndex(
+        (item) => item.code === code
+      );
+
+      if (existingItemIndex !== -1) {
+        // If the item already exists, update the quantity
+        cart.items[existingItemIndex].quantity += quantity;
+      } else {
+        // If the item is not in the cart, add it
+        cart.items.push({
+          itemName,
+          price,
+          code,
+          stitchingOptions,
+          fabric,
+          washCare,
+          length,
+          quantity,
+        });
+      }
+
+      // Save the updated cart
+      await cart.save();
+
+      res.status(200).json({ message: "Item added to cart successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
+  },
 
-    // Check if the product is already in the cart
-    const existingItem = cart.items.find(
-      (item) => item.productId.toString() === productId
-    );
+  removeFromCart: async (req, res) => {
+    try {
+      // Extract data from the request body
+      const { userId, code } = req.body;
 
-    if (existingItem) {
-      // If the product exists, update the quantity
-      existingItem.quantity += quantity || 1;
-    } else {
-      // If the product is not in the cart, add a new item
-      cart.items.push({ productId, quantity: quantity || 1 });
+      // Basic validation - check if required fields are present
+      if (!userId || !code) {
+        return res
+          .status(400)
+          .json({ message: "Invalid request. Missing required fields." });
+      }
+
+      // Find the user's cart
+      const cart = await Cart.findOne({ userId });
+
+      if (!cart) {
+        return res.status(404).json({ message: "Cart not found" });
+      }
+
+      // Check if the item is in the cart
+      const existingItemIndex = cart.items.findIndex(
+        (item) => item.code === code
+      );
+
+      if (existingItemIndex === -1) {
+        return res.status(404).json({ message: "Item not found in the cart" });
+      }
+
+      // Remove the item from the cart
+      cart.items.splice(existingItemIndex, 1);
+
+      // Save the updated cart
+      await cart.save();
+
+      res.status(200).json({ message: "Item removed from cart successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-
-    // Save the cart to the database
-    await cart.save();
-
-    res.status(201).json({ message: "Item added to cart successfully", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
+  },
 };
 
-const removeFromCart = async (req, res) => {
-  try {
-    const { userId, productId } = req.body;
-
-    // Find the user's cart
-    const cart = await CartModel.findOne({ userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    // Remove the product from the cart
-    cart.items = cart.items.filter(
-      (item) => item.productId.toString() !== productId
-    );
-
-    // Save the updated cart to the database
-    await cart.save();
-
-    res
-      .status(200)
-      .json({ message: "Item removed from cart successfully", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-const updateCartItem = async (req, res) => {
-  try {
-    const { userId, productId, quantity } = req.body;
-
-    // Find the user's cart
-    const cart = await CartModel.findOne({ userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    // Find the item in the cart
-    const cartItem = cart.items.find(
-      (item) => item.productId.toString() === productId
-    );
-
-    if (!cartItem) {
-      return res.status(404).json({ message: "Item not found in cart" });
-    }
-
-    // Update the quantity of the item
-    cartItem.quantity = quantity || 1;
-
-    // Save the updated cart to the database
-    await cart.save();
-
-    res
-      .status(200)
-      .json({ message: "Item quantity updated successfully", cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-const getCart = async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    // Find the user's cart
-    const cart = await CartModel.findOne({ userId });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    res.status(200).json({ cart });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-// Export the controller functions
-export default {
-  addToCart,
-  removeFromCart,
-  updateCartItem,
-  getCart,
-};
+export default cartController;

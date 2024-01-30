@@ -1,125 +1,146 @@
-// Import the SelectAddressModel
-import SelectAddressModel from "../models/SelectAddressModel.js";
+// userAddressController.js
+import UserAddress from "../models/SelectAddressModel.js";
 
-// Create a controller function for adding a new address
-const addAddress = async (req, res) => {
+const getAllUserAddresses = async (_req, res) => {
   try {
-    // Get the address details from the request body
-    const {
-      title,
-      apartments,
-      address,
-      city,
-      streetNoOrName,
-      state,
-      country,
-      PINCODE,
-    } = req.body;
-
-    // Create a new address document
-    const newAddress = new SelectAddressModel({
-      title,
-      apartments,
-      address,
-      city,
-      streetNoOrName,
-      state,
-      country,
-      PINCODE,
-    });
-
-    // Save the new address to the database
-    await newAddress.save();
-
-    // Send a success response
-    res.status(201).json({ message: "Address added successfully" });
+    const userAddresses = await UserAddress.find();
+    res.status(200).json({ userAddresses });
   } catch (error) {
-    // Handle any errors
     console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Create a controller function for updating an address by ID
-const updateAddress = async (req, res) => {
+const addUserAddress = async (req, res) => {
   try {
-    // Get the address ID from the request parameters
-    const { addressId } = req.params;
+    const {
+      firstName,
+      lastName,
+      country,
+      state,
+      city,
+      houseNumber,
+      street,
+      landmark,
+    } = req.body;
 
-    // Get the updated address details from the request body
-    const updatedAddress = req.body;
+    // Validate required fields
+    if (
+      !firstName ||
+      !lastName ||
+      !country ||
+      !state ||
+      !city ||
+      !houseNumber ||
+      !street
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
-    // Find the address by ID and update it
-    const result = await SelectAddressModel.findByIdAndUpdate(
+    const newUserAddress = new UserAddress({
+      firstName,
+      lastName,
+      country,
+      state,
+      city,
+      houseNumber,
+      street,
+      landmark,
+    });
+
+    await newUserAddress.save();
+
+    res.status(201).json({
+      message: "User address added successfully",
+      userAddress: newUserAddress,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error adding user address" });
+  }
+};
+
+const updateUserAddress = async (req, res) => {
+  try {
+    const addressId = req.params.addressId;
+    const {
+      firstName,
+      lastName,
+      country,
+      state,
+      city,
+      houseNumber,
+      street,
+      landmark,
+    } = req.body;
+
+    // Validate required fields
+    if (
+      !firstName ||
+      !lastName ||
+      !country ||
+      !state ||
+      !city ||
+      !houseNumber ||
+      !street
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Find and update the user address
+    const updatedUserAddress = await UserAddress.findByIdAndUpdate(
       addressId,
-      updatedAddress,
+      {
+        firstName,
+        lastName,
+        country,
+        state,
+        city,
+        houseNumber,
+        street,
+        landmark,
+      },
       { new: true }
     );
 
-    // Check if the address was found and updated
-    if (!result) {
-      return res.status(404).json({ message: "Address not found" });
+    if (!updatedUserAddress) {
+      return res.status(404).json({ message: "User address not found" });
     }
 
-    // Send a success response
-    res.status(200).json({ message: "Address updated successfully" });
+    res.status(200).json({
+      message: "User address updated successfully",
+      userAddress: updatedUserAddress,
+    });
   } catch (error) {
-    // Handle any errors
     console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "Error updating user address" });
   }
 };
 
-// Create a controller function for deleting an address by ID
-const deleteAddress = async (req, res) => {
+const deleteUserAddress = async (req, res) => {
   try {
-    // Get the address ID from the request parameters
-    const { addressId } = req.params;
+    const addressId = req.params.addressId;
 
-    // Find the address by ID and delete it
-    const result = await SelectAddressModel.findByIdAndDelete(addressId);
+    // Find and delete the user address
+    const deletedUserAddress = await UserAddress.findByIdAndRemove(addressId);
 
-    // Check if the address was found and deleted
-    if (!result) {
-      return res.status(404).json({ message: "Address not found" });
+    if (!deletedUserAddress) {
+      return res.status(404).json({ message: "User address not found" });
     }
 
-    // Send a success response
-    res.status(200).json({ message: "Address deleted successfully" });
+    res.status(200).json({
+      message: "User address deleted successfully",
+      userAddress: deletedUserAddress,
+    });
   } catch (error) {
-    // Handle any errors
     console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: "Error deleting user address" });
   }
 };
 
-// Create a controller function for getting an address by ID
-const getAddressById = async (req, res) => {
-  try {
-    // Get the address ID from the request parameters
-    const { addressId } = req.params;
-
-    // Find the address by ID
-    const address = await SelectAddressModel.findById(addressId);
-
-    // Check if the address was found
-    if (!address) {
-      return res.status(404).json({ message: "Address not found" });
-    }
-
-    // Send the address as a response
-    res.status(200).json({ address });
-  } catch (error) {
-    // Handle any errors
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-// Export the controller functions
 export default {
-  addAddress,
-  updateAddress,
-  deleteAddress,
-  getAddressById,
+  getAllUserAddresses,
+  addUserAddress,
+  updateUserAddress,
+  deleteUserAddress,
 };

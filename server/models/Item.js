@@ -1,19 +1,21 @@
-import { Schema, model } from "mongoose";
+// models/Item.js
+import mongoose from "mongoose";
 
-const itemSchema = new Schema({
-  category: { type: String, required: false },
+const itemSchema = new mongoose.Schema({
   itemname: { type: String, required: true },
-  units: {
+  price: { type: String, required: true },
+  code: { type: String, required: true },
+  stitchingOptions: {
     type: String,
-    default: "kg",
+    enum: ["true", "false"],
+    default: "false",
   },
-  costPerUnit: { type: Number, required: true },
-  discount: { type: Number, default: 0 },
-  quantity: { type: Number, default: 0 },
-  description: String,
-  itemImage: { type: String },
+  fabric: { type: String },
+  washCare: { type: String },
+  length: { type: String },
+  description: { type: String },
 });
 
-const ItemModel = model("Item", itemSchema);
+const Item = mongoose.model("Item", itemSchema);
 
-export default ItemModel;
+export default Item;

@@ -67,19 +67,27 @@ router.delete(
   "/admin/:adminId/orders/:orderId/delete",
   OrderController.deleteOrder
 );
-router.post("/addresses", SelectAddressController.addAddress);
+router.post("/addresses", SelectAddressController.addUserAddress);
 
 // Route for updating an address by ID
-router.put("/addresses/:addressId", SelectAddressController.updateAddress);
+router.put("/addresses/:addressId", SelectAddressController.updateUserAddress);
 
 // Route for deleting an address by ID
-router.delete("/addresses/:addressId", SelectAddressController.deleteAddress);
+router.delete(
+  "/addresses/:addressId",
+  SelectAddressController.deleteUserAddress
+);
 
 // Route for getting an address by ID
-router.get("/addresses/:addressId", SelectAddressController.getAddressById);
+router.get(
+  "/addresses/:addressId",
+  SelectAddressController.getAllUserAddresses
+);
 
-router.post("/add", CartController.addToCart);
-router.post("/remove", CartController.removeFromCart);
-router.post("/update", CartController.updateCartItem);
-router.get("/:userId", CartController.getCart);
+// Add item to cart
+router.post("/add-to-cart", CartController.addToCart);
+
+// Remove item from cart
+router.post("/remove-from-cart", CartController.removeFromCart);
+
 export default router;
