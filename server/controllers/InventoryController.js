@@ -43,6 +43,25 @@ const addItem = async (req, res) => {
         description,
       } = req.body;
 
+      const itemImages = {
+        itemImage1:
+          req.files && req.files["itemImage1"]
+            ? req.files["itemImage1"][0].buffer.toString("base64")
+            : null,
+        itemImage2:
+          req.files && req.files["itemImage2"]
+            ? req.files["itemImage2"][0].buffer.toString("base64")
+            : null,
+        itemImage3:
+          req.files && req.files["itemImage3"]
+            ? req.files["itemImage3"][0].buffer.toString("base64")
+            : null,
+        itemImage4:
+          req.files && req.files["itemImage4"]
+            ? req.files["itemImage4"][0].buffer.toString("base64")
+            : null,
+      };
+
       const item = new ItemModel({
         category,
         itemname,
@@ -53,10 +72,7 @@ const addItem = async (req, res) => {
         washCare,
         length,
         description,
-        itemImage1: req.files["itemImage1"][0].buffer.toString("base64"),
-        itemImage2: req.files["itemImage2"][0].buffer.toString("base64"),
-        itemImage3: req.files["itemImage3"][0].buffer.toString("base64"),
-        itemImage4: req.files["itemImage4"][0].buffer.toString("base64"),
+        ...itemImages,
       });
 
       await item.save();

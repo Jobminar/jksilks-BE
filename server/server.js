@@ -6,7 +6,7 @@ import cors from "cors";
 import pkg from "body-parser";
 const { json } = pkg;
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 2000;
 
 // Load environment variables
 config();
