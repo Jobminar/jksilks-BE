@@ -19,7 +19,8 @@ connect(process.env.MONGO_URL)
 // Middleware
 app.use(json()); // Correct usage of bodyParser.json()
 app.use(cors());
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/", routes);
 

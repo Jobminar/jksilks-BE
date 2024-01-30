@@ -3,7 +3,12 @@ import ItemModel from "../models/Item.js";
 import multer from "multer";
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage }).fields([
+  { name: "itemImage1", maxCount: 1 },
+  { name: "itemImage2", maxCount: 1 },
+  { name: "itemImage3", maxCount: 1 },
+  { name: "itemImage4", maxCount: 1 },
+]);
 
 const getInventory = async (_req, res) => {
   try {
@@ -17,20 +22,13 @@ const getInventory = async (_req, res) => {
 
 const addItem = async (req, res) => {
   try {
-    upload.fields([
-      { name: "itemImage1" },
-      { name: "itemImage2" },
-      { name: "itemImage3" },
-      { name: "itemImage4" },
-    ])(req, res, async (err) => {
+    // Assuming upload middleware is used here for handling file uploads
+    upload(req, res, async (err) => {
       if (err) {
         console.error(err);
-
-        if (err instanceof multer.MulterError) {
-          return res.status(400).json({ message: "File upload error" });
-        }
-
-        return res.status(500).json({ message: "Internal server error" });
+        return res
+          .status(500)
+          .json({ success: false, message: "Error uploading files" });
       }
 
       const {
@@ -45,27 +43,7 @@ const addItem = async (req, res) => {
         description,
       } = req.body;
 
-      // Validate required fields
-      if (!category || !itemname || !price || !code) {
-        return res.status(400).json({ message: "Missing required fields" });
-      }
-
-      const itemImages = {
-        itemImage1: req.files["itemImage1"]
-          ? req.files["itemImage1"][0].buffer.toString("base64")
-          : "",
-        itemImage2: req.files["itemImage2"]
-          ? req.files["itemImage2"][0].buffer.toString("base64")
-          : "",
-        itemImage3: req.files["itemImage3"]
-          ? req.files["itemImage3"][0].buffer.toString("base64")
-          : "",
-        itemImage4: req.files["itemImage4"]
-          ? req.files["itemImage4"][0].buffer.toString("base64")
-          : "",
-      };
-
-      const newItem = {
+      const item = new ItemModel({
         category,
         itemname,
         price,
@@ -75,17 +53,20 @@ const addItem = async (req, res) => {
         washCare,
         length,
         description,
-        ...itemImages,
-      };
+        itemImage1: req.files["itemImage1"][0].buffer.toString("base64"),
+        itemImage2: req.files["itemImage2"][0].buffer.toString("base64"),
+        itemImage3: req.files["itemImage3"][0].buffer.toString("base64"),
+        itemImage4: req.files["itemImage4"][0].buffer.toString("base64"),
+      });
 
-      // Save the new item to the database
-      await ItemModel.create(newItem);
-
-      res.status(201).json({ message: "Item added successfully" });
+      await item.save();
+      res
+        .status(201)
+        .json({ success: true, message: "Item added successfully" });
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error adding item to inventory" });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
