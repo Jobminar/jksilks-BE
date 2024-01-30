@@ -1,3 +1,4 @@
+// controllers/ItemController.js
 import ItemModel from "../models/Item.js";
 import multer from "multer";
 
@@ -16,7 +17,12 @@ const getInventory = async (_req, res) => {
 
 const addItem = async (req, res) => {
   try {
-    upload.single("itemImage")(req, res, async (err) => {
+    upload.fields([
+      { name: "itemImage1" },
+      { name: "itemImage2" },
+      { name: "itemImage3" },
+      { name: "itemImage4" },
+    ])(req, res, async (err) => {
       if (err) {
         console.error(err);
 
@@ -40,16 +46,24 @@ const addItem = async (req, res) => {
       } = req.body;
 
       // Validate required fields
-      if (!itemname || !price || !code) {
+      if (!category || !itemname || !price || !code) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      const itemImage = req.file;
-
-      if (!itemImage) {
-        console.log("Warning: itemImage is empty");
-        // Handle the case where itemImage is empty (e.g., provide a default image)
-      }
+      const itemImages = {
+        itemImage1: req.files["itemImage1"]
+          ? req.files["itemImage1"][0].buffer.toString("base64")
+          : "",
+        itemImage2: req.files["itemImage2"]
+          ? req.files["itemImage2"][0].buffer.toString("base64")
+          : "",
+        itemImage3: req.files["itemImage3"]
+          ? req.files["itemImage3"][0].buffer.toString("base64")
+          : "",
+        itemImage4: req.files["itemImage4"]
+          ? req.files["itemImage4"][0].buffer.toString("base64")
+          : "",
+      };
 
       const newItem = {
         category,
@@ -61,7 +75,7 @@ const addItem = async (req, res) => {
         washCare,
         length,
         description,
-        itemImage: itemImage ? itemImage.buffer.toString("base64") : "",
+        ...itemImages,
       };
 
       // Save the new item to the database
