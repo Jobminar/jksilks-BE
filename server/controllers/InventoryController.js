@@ -28,6 +28,7 @@ const addItem = async (req, res) => {
       }
 
       const {
+        category,
         itemname,
         price,
         code,
@@ -51,6 +52,7 @@ const addItem = async (req, res) => {
       }
 
       const newItem = {
+        category,
         itemname,
         price,
         code,
