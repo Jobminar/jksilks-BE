@@ -149,12 +149,10 @@ const updateItem = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
 const deleteItem = async (req, res) => {
   try {
-    const itemId = req.params.itemId;
+    const { itemId } = req.params; // Destructuring for cleaner access
 
-    // Check if the item with the given ID exists
     const existingItem = await ItemModel.findById(itemId);
 
     if (!existingItem) {
@@ -163,8 +161,7 @@ const deleteItem = async (req, res) => {
         .json({ success: false, message: "Item not found" });
     }
 
-    // Use remove method to delete the item
-    await existingItem.remove();
+    await existingItem.deleteOne();
 
     res
       .status(200)
