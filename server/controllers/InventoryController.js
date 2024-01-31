@@ -86,69 +86,29 @@ const addItem = async (req, res) => {
   }
 };
 
-const updateItem = async (req, res) => {
+const updateItemField = async (req, res) => {
   try {
-    const itemIds = req.body.itemIds;
+    const itemId = req.params.itemId;
+    const fieldToUpdate = req.body.field; // The field you want to update
+    const updatedValue = req.body.value; // The new value
 
-    for (const itemId of itemIds) {
-      const existingItem = await ItemModel.findById(itemId);
+    const existingItem = await ItemModel.findById(itemId);
 
-      if (!existingItem) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: `Item with ID ${itemId} not found`,
-          });
-      }
-
-      // Handle file uploads if any
-      await new Promise((resolve, reject) => {
-        upload(req, res, async (err) => {
-          if (err) {
-            console.error(err);
-            reject({ success: false, message: "Error uploading files" });
-          } else {
-            // Update item fields
-            existingItem.category = req.body.category || existingItem.category;
-            existingItem.itemname = req.body.itemname || existingItem.itemname;
-            existingItem.price = req.body.price || existingItem.price;
-            existingItem.code = req.body.code || existingItem.code;
-            existingItem.stitchingOptions =
-              req.body.stitchingOptions || existingItem.stitchingOptions;
-            existingItem.fabric = req.body.fabric || existingItem.fabric;
-            existingItem.washCare = req.body.washCare || existingItem.washCare;
-            existingItem.length = req.body.length || existingItem.length;
-            existingItem.description =
-              req.body.description || existingItem.description;
-
-            // Update item images if uploaded
-            if (req.files) {
-              existingItem.itemImage1 =
-                req.files["itemImage1"][0].buffer.toString("base64") ||
-                existingItem.itemImage1;
-              existingItem.itemImage2 =
-                req.files["itemImage2"][0].buffer.toString("base64") ||
-                existingItem.itemImage2;
-              existingItem.itemImage3 =
-                req.files["itemImage3"][0].buffer.toString("base64") ||
-                existingItem.itemImage3;
-              existingItem.itemImage4 =
-                req.files["itemImage4"][0].buffer.toString("base64") ||
-                existingItem.itemImage4;
-            }
-
-            // Save the updated item
-            await existingItem.save();
-            resolve();
-          }
-        });
-      });
+    if (!existingItem) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Item not found" });
     }
+
+    // Update the specified field
+    existingItem[fieldToUpdate] = updatedValue;
+
+    // Save the updated item
+    await existingItem.save();
 
     res
       .status(200)
-      .json({ success: true, message: "Items updated successfully" });
+      .json({ success: true, message: "Item field updated successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -181,6 +141,6 @@ const deleteItem = async (req, res) => {
 export default {
   getInventory,
   addItem,
-  updateItem,
+  updateItemField,
   deleteItem,
 };
