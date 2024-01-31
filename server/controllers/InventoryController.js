@@ -85,32 +85,44 @@ const addItem = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 const updateItemField = async (req, res) => {
   try {
-    const itemId = req.body.itemId;
-    const fieldToUpdate = req.body.field; // The field you want to update
-    const updatedValue = req.body.value; // The new value
+    const { itemId } = req.params;
+    const updates = req.body;
 
     const existingItem = await ItemModel.findById(itemId);
 
     if (!existingItem) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Item not found" });
+      return res.status(404).json({ message: "Item not found" });
     }
 
-    // Update the specified field
-    existingItem[fieldToUpdate] = updatedValue;
+    // Update item fields based on user input
+    Object.assign(existingItem, updates);
 
-    // Save the updated item
-    await existingItem.save();
+    try {
+      // Attempt to save the updated item
+      const updatedItem = await existingItem.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Item field updated successfully" });
+      console.log("Item updated successfully");
+      res
+        .status(200)
+        .json({ message: "Item updated successfully", item: updatedItem });
+    } catch (error) {
+      console.error("Error saving updated item:", error);
+      console.log("Error updating item in inventory");
+      res.status(500).json({ message: "Error updating item in inventory" });
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    if (error.code === "RequestHeaderFieldsTooLarge") {
+      // Handle 431 error here
+      console.log("Request Header Fields Too Large");
+      res.status(431).json({ message: "Request Header Fields Too Large" });
+    } else {
+      console.error(error);
+      console.log("Error updating item in inventory");
+      res.status(500).json({ message: "Error updating item in inventory" });
+    }
   }
 };
 
