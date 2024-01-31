@@ -7,13 +7,15 @@ import pkg from "body-parser";
 const { json } = pkg;
 const app = express();
 const port = process.env.PORT || 2000;
-
+import compression from "compression";
 // Load environment variables
 config();
 app.use(json()); // Correct usage of bodyParser.json()
 app.use(cors());
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.raw({ type: "*/*" }));
 // Routes
 app.use("/", routes);
 // Connect to MongoDB (remove deprecated options)
