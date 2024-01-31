@@ -17,8 +17,8 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.raw({ type: "*/*" }));
-app.use(bodyParser.json({ limit: "10mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+app.use(bodyParser.json({ limit: "500mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "500mb", extended: true }));
 // Routes
 app.use("/", routes);
 // Connect to MongoDB (remove deprecated options)
