@@ -149,6 +149,7 @@ const updateItem = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 const deleteItem = async (req, res) => {
   try {
     const { itemId } = req.params; // Destructuring for cleaner access
