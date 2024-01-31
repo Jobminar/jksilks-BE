@@ -85,10 +85,9 @@ const addItem = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
 const updateItemField = async (req, res) => {
   try {
-    const itemId = req.params.itemId;
+    const itemId = req.body.itemId;
     const fieldToUpdate = req.body.field; // The field you want to update
     const updatedValue = req.body.value; // The new value
 
