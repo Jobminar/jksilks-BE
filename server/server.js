@@ -8,7 +8,7 @@ const { json } = pkg;
 const app = express();
 const port = process.env.PORT || 2000;
 import compression from "compression";
-import bodyParser from "body-parser";
+
 // Load environment variables
 config();
 app.use(json()); // Correct usage of bodyParser.json()
@@ -16,9 +16,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.raw({ type: "*/*" }));
-app.use(bodyParser.json({ limit: "500mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "500mb", extended: true }));
+
 // Routes
 app.use("/", routes);
 // Connect to MongoDB (remove deprecated options)
