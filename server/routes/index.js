@@ -46,7 +46,7 @@ router.post("/admin/login", adminController.adminLogin);
 router.get("/inventory", InventoryController.getInventory);
 router.post("/addItem", InventoryController.addItem);
 // Update an existing item
-router.put("/inventory/:itemId", InventoryController.updateItemField);
+router.patch("/inventory/:itemId", InventoryController.updateItemField);
 
 // Delete an item by ID
 router.delete("/inventory/:itemId", InventoryController.deleteItem);
