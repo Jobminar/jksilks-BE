@@ -5,49 +5,29 @@ import { config } from "dotenv";
 import cors from "cors";
 import pkg from "body-parser";
 const { json } = pkg;
+const app = express();
+const port = process.env.PORT || 2000;
 import compression from "compression";
 
 // Load environment variables
 config();
-
-const app = express();
-const port = process.env.PORT || 2000;
-
-// CORS middleware with logging
-app.use(
-  cors({
-    origin: "*", // Adjust as needed in production
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-    credentials: true, // Allow sending cookies
-    onError: (err) => {
-      console.error("CORS error:", err);
-    },
-  })
-);
-
-// Compression middleware
+app.use(json()); // Correct usage of bodyParser.json()
+app.use(cors());
 app.use(compression());
-
-// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection
+// Routes
+app.use("/", routes);
+// Connect to MongoDB (remove deprecated options)
 connect(process.env.MONGO_URL)
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error("MongoDB connection error:", error));
 
-// Routes
-app.use("/", routes);
+// Middleware
 
-// Error handler middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Internal server error");
-});
+// Error handler middleware (you'll need to implement this)
 
-// Listen for connections
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
