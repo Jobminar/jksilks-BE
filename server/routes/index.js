@@ -87,9 +87,9 @@ router.get(
 );
 
 // Add item to cart
-router.post("/add-to-cart", CartController.addToCart);
+router.post("/addcart", CartController.addToCart);
 
 // Remove item from cart
-router.post("/remove-from-cart", CartController.removeFromCart);
+router.post("/removecart", CartController.removeFromCart);
 
 export default router;
