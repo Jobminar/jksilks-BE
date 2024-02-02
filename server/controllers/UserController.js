@@ -57,7 +57,20 @@ export const login = async (req, res) => {
 
     // You can generate a JWT token here and send it in the response if login is successful
 
-    res.status(200).json({ message: "Login successful" });
+    // Send user information along with the success message
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        mobileNumber: user.mobileNumber,
+        gender: user.gender,
+        dateOfBirth: user.dateOfBirth,
+        location: user.location,
+        alternateNumber: user.alternateNumber,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
