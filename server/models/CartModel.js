@@ -6,7 +6,7 @@ const cartSchema = new mongoose.Schema({
   itemname: { type: String, required: false },
   price: { type: String, required: false },
   code: { type: String, required: false },
-  stitchingOptions: { type: Boolean, default: false },
+  stitchingOptions: { type: String, default: false },
   fabric: { type: String },
   washCare: { type: String },
   length: { type: String },
