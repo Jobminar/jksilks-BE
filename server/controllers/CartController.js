@@ -66,7 +66,7 @@ const getCart = async (req, res) => {
 
 const deleteFromCart = async (req, res) => {
   try {
-    const { itemId } = req.body;
+    const { itemId } = req.params; // Corrected from req.param to req.params
 
     // Validate item ID
     if (!itemId) {

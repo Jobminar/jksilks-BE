@@ -90,6 +90,6 @@ router.get(
 router.post("/add-to-cart", CartController.addToCart);
 router.get("/get-cart", CartController.getCart);
 // Remove item from cart
-router.delete("/remove-from-cart", CartController.deleteFromCart);
+router.delete("/remove-from-cart/:itemId", CartController.deleteFromCart);
 
 export default router;
