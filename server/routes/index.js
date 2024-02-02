@@ -5,7 +5,7 @@ import { signup, login } from "../controllers/UserController.js";
 import adminController from "../controllers/AdminController.js";
 import SelectAddressController from "../controllers/SelectAddressController.js";
 import InventoryController from "../controllers/InventoryController.js";
-
+import wishlistController from "../controllers/WishListController.js";
 import OrderController from "../controllers/OrderController.js";
 import {
   createBillDetails,
@@ -93,4 +93,15 @@ router.get("/get-cart", CartController.getCart);
 router.delete("/remove-from-cart/:itemId", CartController.deleteFromCart);
 router.get("/getCartByUserId/:userId", CartController.getCartByUserId);
 router.delete("/deleteCartByUserId/:userId", CartController.deleteCartByUserId);
+//Routes for Whishlist
+router.post("/addToWishlist", wishlistController.addToWishlist);
+router.get(
+  "/getWishlistByUserId/:userId",
+  wishlistController.getWishlistByUserId
+);
+router.delete(
+  "/removeFromWishlist/:userId/:itemId",
+  wishlistController.removeFromWishlist
+);
+
 export default router;

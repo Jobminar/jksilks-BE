@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 
-const cartSchema = new mongoose.Schema({
-  userId: { type: String, required: false },
+const wishlistSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  itemId: { type: String, required: true },
+  addedAt: { type: Date, default: Date.now },
   category: { type: String, required: false },
   itemname: { type: String, required: false },
-  price: { type: String, required: false },
+  price: { type: Number, required: false },
   code: { type: String, required: false },
   stitchingOptions: { type: String, default: false },
   fabric: { type: String },
@@ -15,11 +17,8 @@ const cartSchema = new mongoose.Schema({
   itemImage2: { type: String, required: false },
   itemImage3: { type: String, required: false },
   itemImage4: { type: String, required: false },
-  quantity: { type: Number, required: false },
-  payment: { type: String, required: false },
-  orderStatus: { type: String, required: false },
 });
 
-const Cart = mongoose.model("Cart", cartSchema);
+const Wishlist = mongoose.model("Wishlist", wishlistSchema);
 
-export default Cart;
+export default Wishlist;
