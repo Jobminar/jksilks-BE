@@ -3,6 +3,7 @@ import Cart from "../models/CartModel.js";
 const addToCart = async (req, res) => {
   try {
     const {
+      userId,
       category,
       itemname,
       price,
@@ -27,6 +28,7 @@ const addToCart = async (req, res) => {
 
     // Create a new cart item
     const newItem = new Cart({
+      userId,
       category,
       itemname,
       price,
@@ -64,6 +66,25 @@ const getCart = async (req, res) => {
   }
 };
 
+const getCartByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Validate userId
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required." });
+    }
+
+    // Retrieve cart items by userId
+    const cartItems = await Cart.find({ userId });
+
+    res.status(200).json(cartItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 const deleteFromCart = async (req, res) => {
   try {
     const { itemId } = req.params; // Corrected from req.param to req.params
@@ -91,8 +112,31 @@ const deleteFromCart = async (req, res) => {
   }
 };
 
+const deleteCartByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Validate userId
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required." });
+    }
+
+    // Delete all items from the cart by userId
+    const deletedItems = await Cart.deleteMany({ userId });
+
+    res
+      .status(200)
+      .json({ message: "Cart items deleted successfully", deletedItems });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export default {
   addToCart,
   getCart,
+  getCartByUserId,
   deleteFromCart,
+  deleteCartByUserId,
 };

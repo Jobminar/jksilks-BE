@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const cartSchema = new mongoose.Schema({
-  // userId: { type: String, required: false },
+  userId: { type: String, required: false },
   category: { type: String, required: false },
   itemname: { type: String, required: false },
   price: { type: String, required: false },
@@ -15,7 +15,7 @@ const cartSchema = new mongoose.Schema({
   itemImage2: { type: String, required: false },
   itemImage3: { type: String, required: false },
   itemImage4: { type: String, required: false },
-  // quantity: { type: Number, required: false },
+  quantity: { type: Number, required: false },
   // payment: { type: String },
   // orderStatus: { type: String, required: false },
 });
