@@ -29,7 +29,7 @@ const addToWishlist = async (req, res) => {
 
     if (existingItem) {
       // Item already in the wishlist
-      return res.status(400).json({ message: "Item already in the wishlist." });
+      return res.status(401).json({ message: "Item already in the wishlist." });
     }
 
     // Create a new wishlist item
