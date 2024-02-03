@@ -58,23 +58,12 @@ const addToWishlist = async (req, res) => {
   }
 };
 
-const getWishlistByUserId = async (req, res) => {
+const getWishlistItems = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId;
 
-    // Validate userId
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is required." });
-    }
-
-    // Retrieve wishlist items by userId
+    // Find all items in the wishlist for the given user
     const wishlistItems = await Wishlist.find({ userId });
-
-    if (wishlistItems.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Wishlist is empty for the specified user." });
-    }
 
     res.status(200).json(wishlistItems);
   } catch (error) {
@@ -83,18 +72,12 @@ const getWishlistByUserId = async (req, res) => {
   }
 };
 
-const removeFromWishlist = async (req, res) => {
+const deleteFromWishlist = async (req, res) => {
   try {
-    const { userId, itemId } = req.body;
+    const userId = req.params.userId;
+    const itemId = req.params.itemId;
 
-    // Validate userId and itemId
-    if (!userId || !itemId) {
-      return res.status(400).json({
-        error: "Both User ID and Item ID are required for removal.",
-      });
-    }
-
-    // Find and delete the item from the wishlist by userId and itemId
+    // Find and delete the item from the wishlist
     const deletedItem = await Wishlist.findOneAndDelete({ userId, itemId });
 
     if (!deletedItem) {
@@ -103,10 +86,9 @@ const removeFromWishlist = async (req, res) => {
         .json({ message: "Item not found in the wishlist." });
     }
 
-    res.status(200).json({
-      message: "Item removed from wishlist successfully",
-      deletedItem,
-    });
+    res
+      .status(200)
+      .json({ message: "Item deleted from the wishlist successfully." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -115,6 +97,6 @@ const removeFromWishlist = async (req, res) => {
 
 export default {
   addToWishlist,
-  getWishlistByUserId,
-  removeFromWishlist,
+  getWishlistItems,
+  deleteFromWishlist,
 };
