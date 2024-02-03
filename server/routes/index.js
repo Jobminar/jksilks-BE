@@ -91,7 +91,7 @@ router.post("/add-to-cart", CartController.addToCart);
 router.get("/get-cart", CartController.getCart);
 // Remove item from cart
 router.delete("/remove-from-cart", CartController.deleteFromCart);
-router.get("/getCartByUserId", CartController.getCartByUserId);
+router.get("/getCartByUserId/:userId", CartController.getCartByUserId);
 router.delete("/deleteCartByUserId", CartController.deleteCartByUserId);
 //Routes for Whishlist
 // Add item to wishlist
