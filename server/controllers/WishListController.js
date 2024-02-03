@@ -15,9 +15,9 @@ const addToWishlist = async (req, res) => {
       length,
       description,
       itemImage1,
-      itemImage2,
-      itemImage3,
-      itemImage4,
+      // itemImage2,
+      // itemImage3,
+      // itemImage4,
     } = req.body;
 
     // Validate required fields
@@ -48,9 +48,9 @@ const addToWishlist = async (req, res) => {
       length,
       description,
       itemImage1,
-      itemImage2,
-      itemImage3,
-      itemImage4,
+      // itemImage2,
+      // itemImage3,
+      // itemImage4,
     });
 
     // Save the new item to the database
