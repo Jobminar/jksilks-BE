@@ -15,9 +15,6 @@ const addToWishlist = async (req, res) => {
       length,
       description,
       itemImage1,
-      // itemImage2,
-      // itemImage3,
-      // itemImage4,
     } = req.body;
 
     // Validate required fields
@@ -31,7 +28,8 @@ const addToWishlist = async (req, res) => {
     const existingItem = await Wishlist.findOne({ userId, itemId });
 
     if (existingItem) {
-      return res.status(400).json({ error: "Item already in the wishlist." });
+      // Item already in the wishlist
+      return res.status(400).json({ message: "Item already in the wishlist." });
     }
 
     // Create a new wishlist item
@@ -48,9 +46,6 @@ const addToWishlist = async (req, res) => {
       length,
       description,
       itemImage1,
-      // itemImage2,
-      // itemImage3,
-      // itemImage4,
     });
 
     // Save the new item to the database
