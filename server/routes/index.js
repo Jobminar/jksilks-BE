@@ -94,11 +94,8 @@ router.delete("/remove-from-cart", CartController.deleteFromCart);
 router.get("/getCartByUserId", CartController.getCartByUserId);
 router.delete("/deleteCartByUserId", CartController.deleteCartByUserId);
 //Routes for Whishlist
-router.post("/addToWishlist", wishlistController.addToWishlist);
-router.get(
-  "/getWishlistByUserId/:userId",
-  wishlistController.getWishlistByUserId
-);
-router.delete("/removeFromWishlist", wishlistController.removeFromWishlist);
+router.post("/wishlist/add", wishlistController.addToWishlist);
+router.get("/wishlist/:userId", wishlistController.getWishlistByUserId);
+router.post("/wishlist/remove", wishlistController.removeFromWishlist);
 
 export default router;

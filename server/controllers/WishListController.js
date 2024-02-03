@@ -70,6 +70,12 @@ const getWishlistByUserId = async (req, res) => {
     // Retrieve wishlist items by userId
     const wishlistItems = await Wishlist.find({ userId });
 
+    if (wishlistItems.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Wishlist is empty for the specified user." });
+    }
+
     res.status(200).json(wishlistItems);
   } catch (error) {
     console.error(error);
@@ -92,7 +98,9 @@ const removeFromWishlist = async (req, res) => {
     const deletedItem = await Wishlist.findOneAndDelete({ userId, itemId });
 
     if (!deletedItem) {
-      return res.status(404).json({ error: "Item not found in the wishlist." });
+      return res
+        .status(404)
+        .json({ message: "Item not found in the wishlist." });
     }
 
     res.status(200).json({
