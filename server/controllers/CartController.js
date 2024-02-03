@@ -4,6 +4,7 @@ const addToCart = async (req, res) => {
   try {
     const {
       userId,
+      itemId,
       category,
       itemname,
       price,
@@ -26,9 +27,18 @@ const addToCart = async (req, res) => {
       });
     }
 
+    // Check if the item is already in the cart for the user
+    const existingItem = await Cart.findOne({ userId, itemId });
+
+    if (existingItem) {
+      // Item already in the cart
+      return res.status(401).json({ message: "Item already in the cart." });
+    }
+
     // Create a new cart item
     const newItem = new Cart({
       userId,
+      itemId,
       category,
       itemname,
       price,
