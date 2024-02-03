@@ -74,8 +74,14 @@ const getWishlistItems = async (req, res) => {
 
 const deleteFromWishlist = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const itemId = req.params.itemId;
+    const { userId, itemId } = req.body;
+
+    // Validate required fields
+    if (!userId || !itemId) {
+      return res.status(400).json({
+        error: "Incomplete data. Please provide both userId and itemId.",
+      });
+    }
 
     // Find and delete the item from the wishlist
     const deletedItem = await Wishlist.findOneAndDelete({ userId, itemId });

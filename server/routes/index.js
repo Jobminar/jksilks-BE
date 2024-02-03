@@ -101,9 +101,6 @@ router.post("/wishlist/add", wishlistController.addToWishlist);
 router.get("/wishlist/:userId", wishlistController.getWishlistItems);
 
 // Delete item from wishlist
-router.delete(
-  "/wishlist/:userId/:itemId",
-  wishlistController.deleteFromWishlist
-);
+router.delete("/wishlist/delete", wishlistController.deleteFromWishlist);
 
 export default router;
