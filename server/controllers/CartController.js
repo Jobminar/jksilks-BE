@@ -87,10 +87,10 @@ const getCartByUserId = async (req, res) => {
 
 const deleteFromCart = async (req, res) => {
   try {
-    const { itemId } = req.params; // Corrected from req.param to req.params
+    const { userId, itemId } = req.body; // Corrected from req.param to req.params
 
     // Validate item ID
-    if (!itemId) {
+    if (!itemId || !userId) {
       return res
         .status(400)
         .json({ error: "Item ID is required for deletion." });
@@ -114,10 +114,10 @@ const deleteFromCart = async (req, res) => {
 
 const deleteCartByUserId = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userId, itemId } = req.body;
 
     // Validate userId
-    if (!userId) {
+    if (!userId || !itemId) {
       return res.status(400).json({ error: "User ID is required." });
     }
 
