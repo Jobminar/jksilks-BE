@@ -79,7 +79,7 @@ const getWishlistByUserId = async (req, res) => {
 
 const removeFromWishlist = async (req, res) => {
   try {
-    const { userId, itemId } = req.params;
+    const { userId, itemId } = req.body;
 
     // Validate userId and itemId
     if (!userId || !itemId) {

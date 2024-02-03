@@ -99,9 +99,6 @@ router.get(
   "/getWishlistByUserId/:userId",
   wishlistController.getWishlistByUserId
 );
-router.delete(
-  "/removeFromWishlist/:userId/:itemId",
-  wishlistController.removeFromWishlist
-);
+router.delete("/removeFromWishlist", wishlistController.removeFromWishlist);
 
 export default router;
