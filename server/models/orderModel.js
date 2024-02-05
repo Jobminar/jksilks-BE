@@ -11,13 +11,14 @@ const singleOrderSchema = new mongoose.Schema({
   washCare: { type: String },
   length: { type: String },
   description: { type: String },
+  quantity: { type: Number },
   itemImage1: String,
   payment: { type: String, required: true },
   orderStatus: { type: String, required: true },
   userId: { type: String },
   adminId: { type: String },
   orderDate: { type: Date, default: Date.now },
-  address: { type: mongoose.Schema.Types.ObjectId, ref: "Address" },
+  addressId: { type: mongoose.Schema.Types.ObjectId, ref: "Address" },
 });
 
 const orderSchema = new mongoose.Schema({
