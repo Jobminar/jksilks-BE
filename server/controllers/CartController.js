@@ -141,9 +141,7 @@ const deleteCartByUserId = async (req, res) => {
 
 const updateCartByQty = async (req, res) => {
   try {
-    const { userId } = req.params; // Extract userId from params
-    const { itemId } = req.params; // Extract itemId from body
-    const { quantity } = req.body;
+    const { userId, itemId, quantity } = req.body;
 
     // Validate userId, itemId, and quantity
     if (!userId || !itemId || !quantity || isNaN(quantity) || quantity <= 0) {
