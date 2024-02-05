@@ -3,10 +3,10 @@ const router = Router();
 import CartController from "../controllers/CartController.js";
 import { signup, login } from "../controllers/UserController.js";
 import adminController from "../controllers/AdminController.js";
-import SelectAddressController from "../controllers/SelectAddressController.js";
+import AddressController from "../controllers/AddressController.js";
 import InventoryController from "../controllers/InventoryController.js";
 import wishlistController from "../controllers/WishListController.js";
-import OrderController from "../controllers/OrderController.js";
+
 import {
   createBillDetails,
   getAllBillDetails,
@@ -14,6 +14,7 @@ import {
   updateBillDetailsById,
   deleteBillDetailsById,
 } from "../controllers/BillDetailsController.js";
+import OrderController from "../controllers/OrderController.js";
 
 router.post("/signup", signup);
 router.post("/login", login);
@@ -38,10 +39,6 @@ router.post("/admin/signup", adminController.adminSignup);
 // Admin login
 router.post("/admin/login", adminController.adminLogin);
 
-// Get admin inventory
-
-// Add item to admin inventory
-
 // Define routes for getting inventory and adding an item
 router.get("/inventory", InventoryController.getInventory);
 router.post("/addItem", InventoryController.addItem);
@@ -49,41 +46,19 @@ router.put("/inventory/:itemId", InventoryController.updateItemField);
 // Delete an item by ID
 router.delete("/inventory/:itemId", InventoryController.deleteItem);
 
-// Get all orders
-router.get("/admin/:adminId/orders", OrderController.getAllOrders);
+// Create a new address
+router.post("/create-address", AddressController.createAddress);
 
-// Get order by ID
-router.get("/admin/:adminId/orders/:orderId", OrderController.getOrderById);
+// Get addresses by userId
+router.get("/addresses/user/:userId", AddressController.getAddressesByUserId);
 
-// Create a new order
-router.post("/admin/:adminId/orders/create", OrderController.createOrder);
+// Update an address
+router.put("/update-address/:addressId", AddressController.updateAddress);
 
-// Update an order
-router.put(
-  "/admin/:adminId/orders/:orderId/update",
-  OrderController.updateOrder
-);
-
-// Delete an order
+// Delete an address
 router.delete(
-  "/admin/:adminId/orders/:orderId/delete",
-  OrderController.deleteOrder
-);
-router.post("/addresses", SelectAddressController.addUserAddress);
-
-// Route for updating an address by ID
-router.put("/addresses/:addressId", SelectAddressController.updateUserAddress);
-
-// Route for deleting an address by ID
-router.delete(
-  "/addresses/:addressId",
-  SelectAddressController.deleteUserAddress
-);
-
-// Route for getting an address by ID
-router.get(
-  "/addresses/:addressId",
-  SelectAddressController.getAllUserAddresses
+  "/delete-address/:userId/:addressId",
+  AddressController.deleteAddress
 );
 
 // Add item to cart
@@ -102,5 +77,13 @@ router.get("/wishlist/:userId", wishlistController.getWishlistItems);
 
 // Delete item from wishlist
 router.delete("/wishlist/delete", wishlistController.deleteFromWishlist);
+// New route for getting all orders
+router.post("/create-order", OrderController.createOrder);
+router.get("/orders/user/:userId", OrderController.getOrdersByUserId);
+router.get(
+  "/orders/status/:orderStatus",
+  OrderController.getOrdersByOrderStatus
+);
+router.get("/orders/all", OrderController.getAllOrders);
 
 export default router;
