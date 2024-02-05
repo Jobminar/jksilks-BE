@@ -56,10 +56,7 @@ router.get("/addresses/user/:userId", AddressController.getAddressesByUserId);
 router.put("/update-address/:addressId", AddressController.updateAddress);
 
 // Delete an address
-router.delete(
-  "/delete-address/:userId/:addressId",
-  AddressController.deleteAddress
-);
+router.delete("/delete-address", AddressController.deleteAddress);
 
 // Add item to cart
 router.post("/add-to-cart", CartController.addToCart);

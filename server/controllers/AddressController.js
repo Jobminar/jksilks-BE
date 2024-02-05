@@ -63,8 +63,7 @@ const updateAddress = async (req, res) => {
 
 // Delete an address
 const deleteAddress = async (req, res) => {
-  const addressId = req.params.addressId;
-  const userId = req.params.userId;
+  const { userId, addressId } = req.body;
 
   try {
     // Check if the provided addressId exists in the Address collection
