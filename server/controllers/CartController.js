@@ -15,9 +15,7 @@ const addToCart = async (req, res) => {
       length,
       description,
       itemImage1,
-      itemImage2,
-      itemImage3,
-      itemImage4,
+      quantity,
     } = req.body;
 
     // Validate required fields
@@ -49,9 +47,7 @@ const addToCart = async (req, res) => {
       length,
       description,
       itemImage1,
-      itemImage2,
-      itemImage3,
-      itemImage4,
+      quantity,
     });
 
     // Save the new item to the database
@@ -143,10 +139,43 @@ const deleteCartByUserId = async (req, res) => {
   }
 };
 
+const updateCartByQty = async (req, res) => {
+  try {
+    const { userId, itemId, quantity } = req.body;
+
+    // Validate userId, itemId, and quantity
+    if (!userId || !itemId || !quantity || isNaN(quantity) || quantity <= 0) {
+      return res.status(400).json({
+        error:
+          "Invalid request. Please provide valid userId, itemId, and quantity.",
+      });
+    }
+
+    // Find the cart item by userId and itemId
+    const cartItem = await Cart.findOne({ userId, itemId });
+
+    if (!cartItem) {
+      return res.status(404).json({ error: "Cart item not found." });
+    }
+
+    // Update the quantity
+    cartItem.quantity = quantity;
+
+    // Save the updated cart item
+    const updatedCartItem = await cartItem.save();
+
+    res.status(200).json(updatedCartItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export default {
   addToCart,
   getCart,
   getCartByUserId,
   deleteFromCart,
   deleteCartByUserId,
+  updateCartByQty,
 };
