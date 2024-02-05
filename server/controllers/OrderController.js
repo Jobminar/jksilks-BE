@@ -81,16 +81,24 @@ const createOrder = async (req, res) => {
 const getOrdersByUserId = async (req, res) => {
   const userId = req.params.userId;
   try {
-    const orderDocument = await Order.findOne({ userId });
+    const orderDocument = await Order.findOne({ userId }).populate(
+      "orders.address"
+    );
+
     if (!orderDocument) {
       return res
         .status(404)
         .json({ error: "User not found or no orders available" });
     }
 
-    const orders = orderDocument.orders.filter(
-      (order) => order.payment === "yes"
-    );
+    // Extract only the orders with payment === "yes" and populate the address field
+    const orders = orderDocument.orders
+      .filter((order) => order.payment === "yes")
+      .map((order) => {
+        const { address, ...rest } = order.toObject(); // Extract address and other fields
+        return { ...rest, address: address._doc }; // Convert address to plain JavaScript object
+      });
+
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });
