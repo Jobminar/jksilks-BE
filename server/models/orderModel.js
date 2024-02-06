@@ -16,7 +16,7 @@ const singleOrderSchema = new mongoose.Schema({
   payment: { type: String, required: true },
   orderStatus: { type: String, required: true },
   userId: { type: String },
-  adminId: { type: String },
+  adminId: { type: String, required: false },
   orderDate: { type: Date, default: Date.now },
   addressId: { type: mongoose.Schema.Types.ObjectId, ref: "Address" },
 });

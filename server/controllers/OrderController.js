@@ -1,48 +1,30 @@
 // controllers/orderController.js
 // controllers/orderController.js
 import Order from "../models/orderModel.js";
-import Admin from "../models/AdminModel.js";
+
 import User from "../models/UserModel.js";
 
 // Create a new order or add an order to an existing document
 const createOrder = async (req, res) => {
-  const { userId, adminId, orders, addressId, ...orderData } = req.body;
+  const { userId, orders, addressId, ...orderData } = req.body;
 
   try {
-    let user;
-
-    // Check if the requester is an admin
-    if (adminId) {
-      const admin = await Admin.findById(adminId);
-      if (!admin) {
-        return res.status(401).json({ error: "Admin not found" });
-      }
-
-      // Additional admin-related logic can be added here
-    } else if (userId) {
-      // Check if the requester is a user
-      user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      // Additional user-related logic can be added here
-    } else {
+    if (!userId) {
       return res
         .status(400)
-        .json({ error: "Invalid request. Missing userId or adminId." });
+        .json({ error: "Invalid request. Missing userId." });
     }
 
-    // Find the order document for the given user or admin
-    let orderDocument;
-
-    if (adminId) {
-      orderDocument = await Order.findOne({ adminId });
-    } else {
-      orderDocument = await Order.findOne({ userId });
+    // Check if the requester is a user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    // If the user or admin doesn't have an existing order document, create a new one
+    // Find the order document for the given user
+    let orderDocument = await Order.findOne({ userId });
+
+    // If the user doesn't have an existing order document, create a new one
     if (!orderDocument) {
       orderDocument = new Order();
     }
@@ -53,7 +35,6 @@ const createOrder = async (req, res) => {
       const ordersWithAddress = orders.map((order) => ({
         ...order,
         userId,
-        adminId,
         address: addressId,
       }));
       orderDocument.orders.push(...ordersWithAddress);
@@ -62,7 +43,6 @@ const createOrder = async (req, res) => {
       const orderWithAddress = {
         ...orderData,
         userId,
-        adminId,
         address: addressId,
       };
       orderDocument.orders.push(orderWithAddress);
@@ -126,9 +106,49 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+// Get orders with payment status "yes"
+const getPaymentStatusOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ "orders.payment": "yes" });
+    res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Update order status by orderId
+const updateOrderStatus = async (req, res) => {
+  const orderId = req.params.orderId;
+  const newStatus = req.body.newStatus;
+
+  try {
+    const orderDocument = await Order.findOne({ "orders._id": orderId });
+
+    if (!orderDocument) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Find and update the specific order status
+    const orderToUpdate = orderDocument.orders.find(
+      (order) => order._id == orderId
+    );
+    if (orderToUpdate) {
+      orderToUpdate.orderStatus = newStatus;
+      await orderDocument.save();
+      res.status(200).json(orderToUpdate);
+    } else {
+      return res.status(404).json({ error: "Order not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   createOrder,
   getOrdersByUserId,
   getOrdersByOrderStatus,
   getAllOrders,
+  updateOrderStatus,
+  getPaymentStatusOrders,
 };

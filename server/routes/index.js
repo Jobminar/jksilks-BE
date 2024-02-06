@@ -84,5 +84,11 @@ router.get(
   OrderController.getOrdersByOrderStatus
 );
 router.get("/orders/all", OrderController.getAllOrders);
+// New route for getting all orders
+router.put("/update-order-status/:orderId", OrderController.updateOrderStatus);
+router.get(
+  "/get-payment-status-orders",
+  OrderController.getPaymentStatusOrders
+);
 
 export default router;
