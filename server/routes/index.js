@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 import CartController from "../controllers/CartController.js";
-import { signup, login } from "../controllers/UserController.js";
+import { signup, login, getAllUsers } from "../controllers/UserController.js";
 import adminController from "../controllers/AdminController.js";
 import AddressController from "../controllers/AddressController.js";
 import InventoryController from "../controllers/InventoryController.js";
@@ -18,6 +18,7 @@ import OrderController from "../controllers/OrderController.js";
 
 router.post("/signup", signup);
 router.post("/login", login);
+router.get("/users", getAllUsers);
 // Add more routes as needed
 // Create a new bill details entry
 router.post("/bill-details", createBillDetails);
