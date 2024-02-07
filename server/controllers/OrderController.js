@@ -64,13 +64,11 @@ const createOrder = async (req, res) => {
   }
 };
 
-// Get orders by userId if payment is 'yes'
 const getOrdersByUserId = async (req, res) => {
   const userId = req.params.userId;
+
   try {
-    const orderDocument = await Order.findOne({ userId })
-      .populate("orders.carts")
-      .populate("orders.address");
+    const orderDocument = await Order.findOne({ userId });
 
     if (!orderDocument) {
       return res
@@ -78,15 +76,35 @@ const getOrdersByUserId = async (req, res) => {
         .json({ error: "User not found or no orders available" });
     }
 
-    // Extract only the orders with payment === "yes" and populate the carts and address fields
-    const orders = orderDocument.orders
-      .filter((order) => order.payment === "yes")
-      .map((order) => {
-        const { carts, address, ...rest } = order.toObject();
-        return { ...rest, carts: carts._doc, address: address._doc };
-      });
+    // Extract cartIds and addressId from each order
+    const { orders } = orderDocument;
+    const cartIds = orders.map((order) => order.cartIds).flat();
+    const addressId = orders.map((order) => order.addressId);
 
-    res.status(200).json(orders);
+    // Retrieve carts and addresses docs
+    const carts = await Cart.find({ _id: { $in: cartIds } });
+    const addresses = await Address.find({ _id: { $in: addressId } });
+
+    res.status(200).json({ orders, carts, addresses });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get all orders and send raw carts and addresses docs
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find();
+
+    // Extract cartIds and addressId from each order
+    const cartIds = orders.map((order) => order.cartIds).flat();
+    const addressId = orders.map((order) => order.addressId);
+
+    // Retrieve carts and addresses docs
+    const carts = await Cart.find({ _id: { $in: cartIds } });
+    const addresses = await Address.find({ _id: { $in: addressId } });
+
+    res.status(200).json({ orders, carts, addresses });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -96,37 +114,36 @@ const getOrdersByUserId = async (req, res) => {
 const getOrdersByOrderStatus = async (req, res) => {
   const orderStatus = req.params.orderStatus;
   try {
-    const orders = await Order.find({ "orders.orderStatus": orderStatus })
-      .populate("orders.carts")
-      .populate("orders.address");
+    const orders = await Order.find({ "orders.orderStatus": orderStatus });
 
-    res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
+    // Extract cartIds and addressId from each order
+    const cartIds = orders.map((order) => order.cartIds).flat();
+    const addressId = orders.map((order) => order.addressId);
+
+    // Retrieve carts and addresses docs
+    const carts = await Cart.find({ _id: { $in: cartIds } });
+    const addresses = await Address.find({ _id: { $in: addressId } });
+
+    res.status(200).json({ orders, carts, addresses });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get all orders with cart and address records
-const getAllOrders = async (req, res) => {
-  try {
-    const orders = await Order.find()
-      .populate("orders.carts")
-      .populate("orders.address");
-
-    res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Get orders with payment status "yes" with cart and address records
+// Get orders with payment status "yes" and send raw carts and addresses docs
 const getPaymentStatusOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ "orders.payment": "yes" })
-      .populate("orders.carts")
-      .populate("orders.address");
+    const orders = await Order.find({ "orders.payment": "yes" });
 
-    res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
+    // Extract cartIds and addressId from each order
+    const cartIds = orders.map((order) => order.cartIds).flat();
+    const addressId = orders.map((order) => order.addressId);
+
+    // Retrieve carts and addresses docs
+    const carts = await Cart.find({ _id: { $in: cartIds } });
+    const addresses = await Address.find({ _id: { $in: addressId } });
+
+    res.status(200).json({ orders, carts, addresses });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
