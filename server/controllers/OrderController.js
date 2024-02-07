@@ -122,18 +122,11 @@ const getAllOrders = async (req, res) => {
 
     // Extract cartIds and addressId from each order
     const cartIds = orders.map((order) => order.cartIds).flat();
-    const addressIds = orders
-      .map((order) => order.orders.map((order) => order.addressId))
-      .flat();
 
-    // Retrieve complete carts and addresses docs
-    const carts = await Cart.find({ _id: { $in: cartIds } }).populate({
-      path: "items.productId",
-      select:
-        "userId category itemname price code stitchingOptions fabric washCare length description itemImage1 quantity itemId",
-    });
+    // Retrieve only cart IDs
+    const carts = await Cart.find({ _id: { $in: cartIds } }).select("_id");
 
-    const addresses = await Address.find({ _id: { $in: addressIds } });
+    const addresses = await Address.find({ _id: { $in: cartIds } });
 
     res.status(200).json({ orders, carts, addresses });
   } catch (error) {
