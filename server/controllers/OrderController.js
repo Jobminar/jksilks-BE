@@ -3,7 +3,6 @@ import Order from "../models/orderModel.js";
 import User from "../models/UserModel.js";
 import Cart from "../models/CartModel.js";
 import Address from "../models/AddressModel.js";
-import User from "../models/UserModel.js";
 
 // Create a new order or add an order to an existing document
 const createOrder = async (req, res) => {
