@@ -1,8 +1,7 @@
 // controllers/orderController.js
-// controllers/orderController.js
 import Order from "../models/orderModel.js";
-
 import User from "../models/UserModel.js";
+import Cart from "../models/CartModel.js"; // Import the Cart model
 
 // Create a new order or add an order to an existing document
 const createOrder = async (req, res) => {
@@ -51,7 +50,11 @@ const createOrder = async (req, res) => {
     // Save the updated order document
     await orderDocument.save();
 
-    res.status(201).json(orderDocument.orders);
+    // Get the cart records with the cartIds from the orders
+    const cartIds = orders.map((order) => order.cartId).flat();
+    const carts = await Cart.find({ _id: { $in: cartIds } });
+
+    res.status(201).json({ orders: orderDocument.orders, carts });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
