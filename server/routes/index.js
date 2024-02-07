@@ -90,5 +90,10 @@ router.get(
   "/get-payment-status-orders",
   OrderController.getPaymentStatusOrders
 );
+// Get cart by cartId
+router.get("/carts/:cartId", OrderController.getCartById);
+
+// Get address by addressId
+router.get("/addresses/:addressId", OrderController.getAddressById);
 
 export default router;

@@ -79,6 +79,8 @@ const createOrder = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// Get orders by userId
 const getOrdersByUserId = async (req, res) => {
   const userId = req.params.userId;
 
@@ -112,6 +114,8 @@ const getOrdersByUserId = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get all orders
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
@@ -136,6 +140,8 @@ const getAllOrders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get orders by orderStatus
 const getOrdersByOrderStatus = async (req, res) => {
   const orderStatus = req.params.orderStatus;
   try {
@@ -158,6 +164,7 @@ const getOrdersByOrderStatus = async (req, res) => {
   }
 };
 
+// Get orders by payment status
 const getPaymentStatusOrders = async (req, res) => {
   try {
     const orders = await Order.find({ "orders.payment": "yes" });
@@ -175,6 +182,7 @@ const getPaymentStatusOrders = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 // Update order status by orderId
 const updateOrderStatus = async (req, res) => {
   const orderId = req.params.orderId;
@@ -203,6 +211,40 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+// Get cart by cartId
+const getAddressById = async (req, res) => {
+  const addressId = req.params.addressId;
+
+  try {
+    const address = await Address.findById(addressId);
+
+    if (!address) {
+      return res.status(404).json({ error: "Address not found" });
+    }
+
+    res.status(200).json(address);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get cart by cartId
+const getCartById = async (req, res) => {
+  const cartId = req.params.cartId;
+
+  try {
+    const cart = await Cart.findById(cartId);
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   createOrder,
   getOrdersByUserId,
@@ -210,4 +252,7 @@ export default {
   getAllOrders,
   updateOrderStatus,
   getPaymentStatusOrders,
+  getCartById,
+  getCartById,
+  getAddressById,
 };
