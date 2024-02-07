@@ -19,6 +19,7 @@ import OrderController from "../controllers/OrderController.js";
 router.post("/signup", signup);
 router.post("/login", login);
 router.get("/users", getAllUsers);
+
 // Add more routes as needed
 // Create a new bill details entry
 router.post("/bill-details", createBillDetails);
@@ -84,6 +85,7 @@ router.get(
   OrderController.getOrdersByOrderStatus
 );
 router.get("/orders/all", OrderController.getAllOrders);
+router.get("/users/:userId", OrderController.getUserById);
 // New route for getting all orders
 router.put("/update-order-status/:orderId", OrderController.updateOrderStatus);
 router.get(
