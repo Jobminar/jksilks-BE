@@ -6,7 +6,8 @@ import Address from "../models/AddressModel.js";
 
 // Create a new order or add an order to an existing document
 const createOrder = async (req, res) => {
-  const { userId, orders, addressId, ...orderData } = req.body;
+  const { userId, addressId, cartIds, totalAmount, payment, orderStatus } =
+    req.body;
 
   try {
     if (!userId) {
@@ -26,14 +27,17 @@ const createOrder = async (req, res) => {
 
     // If the user doesn't have an existing order document, create a new one
     if (!orderDocument) {
-      orderDocument = new Order();
+      orderDocument = new Order({ userId });
     }
 
     // Add the new order to the orders array
     const orderWithAddress = {
-      ...orderData,
-      userId,
-      address: addressId,
+      userId, // Add the userId to the order
+      addressId,
+      cartIds,
+      totalAmount,
+      payment,
+      orderStatus,
     };
 
     orderDocument.orders.push(orderWithAddress);
@@ -42,10 +46,6 @@ const createOrder = async (req, res) => {
     await orderDocument.save();
 
     // Get the cart records with the cartIds from the order
-    const cartIds =
-      orders && Array.isArray(orders)
-        ? orders.map((order) => order.cartId).flat()
-        : [];
     const carts = await Cart.find({ _id: { $in: cartIds } });
 
     res.status(201).json({ orders: orderDocument.orders, carts });

@@ -9,9 +9,11 @@ const singleOrderSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   orders: [singleOrderSchema],
 });
 
 const Order = mongoose.model("Order", orderSchema);
 
+// Export the Order model as default
 export default Order;
