@@ -1,7 +1,8 @@
 // controllers/orderController.js
 import Order from "../models/orderModel.js";
 import User from "../models/UserModel.js";
-import Cart from "../models/CartModel.js"; // Import the Cart model
+import Cart from "../models/CartModel.js";
+import Address from "../models/AddressModel.js";
 
 // Create a new order or add an order to an existing document
 const createOrder = async (req, res) => {
@@ -57,9 +58,9 @@ const createOrder = async (req, res) => {
 const getOrdersByUserId = async (req, res) => {
   const userId = req.params.userId;
   try {
-    const orderDocument = await Order.findOne({ userId }).populate(
-      "orders.address"
-    );
+    const orderDocument = await Order.findOne({ userId })
+      .populate("orders.carts")
+      .populate("orders.address");
 
     if (!orderDocument) {
       return res
@@ -67,12 +68,12 @@ const getOrdersByUserId = async (req, res) => {
         .json({ error: "User not found or no orders available" });
     }
 
-    // Extract only the orders with payment === "yes" and populate the address field
+    // Extract only the orders with payment === "yes" and populate the carts and address fields
     const orders = orderDocument.orders
       .filter((order) => order.payment === "yes")
       .map((order) => {
-        const { address, ...rest } = order.toObject(); // Extract address and other fields
-        return { ...rest, address: address._doc }; // Convert address to plain JavaScript object
+        const { carts, address, ...rest } = order.toObject();
+        return { ...rest, carts: carts._doc, address: address._doc };
       });
 
     res.status(200).json(orders);
@@ -81,31 +82,40 @@ const getOrdersByUserId = async (req, res) => {
   }
 };
 
-// Get orders by orderStatus
+// Get orders by orderStatus with cart and address records
 const getOrdersByOrderStatus = async (req, res) => {
   const orderStatus = req.params.orderStatus;
   try {
-    const orders = await Order.find({ "orders.orderStatus": orderStatus });
+    const orders = await Order.find({ "orders.orderStatus": orderStatus })
+      .populate("orders.carts")
+      .populate("orders.address");
+
     res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get all orders
+// Get all orders with cart and address records
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find()
+      .populate("orders.carts")
+      .populate("orders.address");
+
     res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get orders with payment status "yes"
+// Get orders with payment status "yes" with cart and address records
 const getPaymentStatusOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ "orders.payment": "yes" });
+    const orders = await Order.find({ "orders.payment": "yes" })
+      .populate("orders.carts")
+      .populate("orders.address");
+
     res.status(200).json(orders.map((orderDocument) => orderDocument.orders));
   } catch (error) {
     res.status(500).json({ error: error.message });
