@@ -6,10 +6,10 @@ import Address from "../models/AddressModel.js";
 
 // Create a new order or add an order to an existing document
 const createOrder = async (req, res) => {
-  const { userId, addressId, cartIds, totalAmount, payment, orderStatus } =
-    req.body;
-
   try {
+    const { userId, addressId, cartIds, totalAmount, payment, orderStatus } =
+      req.body;
+
     if (!userId) {
       return res
         .status(400)
@@ -50,7 +50,17 @@ const createOrder = async (req, res) => {
 
     res.status(201).json({ orders: orderDocument.orders, carts });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error creating order:", error);
+
+    // Handle specific errors
+    if (error.name === "ValidationError") {
+      return res
+        .status(400)
+        .json({ error: "Validation error. Check your input." });
+    }
+
+    // Handle other errors
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
