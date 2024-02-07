@@ -28,30 +28,23 @@ const createOrder = async (req, res) => {
       orderDocument = new Order();
     }
 
-    // Add the new orders to the orders array
-    if (orders && Array.isArray(orders)) {
-      // Add the addressId to each order in the array
-      const ordersWithAddress = orders.map((order) => ({
-        ...order,
-        userId,
-        address: addressId,
-      }));
-      orderDocument.orders.push(...ordersWithAddress);
-    } else {
-      // If orders is not an array, treat it as a single order
-      const orderWithAddress = {
-        ...orderData,
-        userId,
-        address: addressId,
-      };
-      orderDocument.orders.push(orderWithAddress);
-    }
+    // Add the new order to the orders array
+    const orderWithAddress = {
+      ...orderData,
+      userId,
+      address: addressId,
+    };
+
+    orderDocument.orders.push(orderWithAddress);
 
     // Save the updated order document
     await orderDocument.save();
 
-    // Get the cart records with the cartIds from the orders
-    const cartIds = orders.map((order) => order.cartId).flat();
+    // Get the cart records with the cartIds from the order
+    const cartIds =
+      orders && Array.isArray(orders)
+        ? orders.map((order) => order.cartId).flat()
+        : [];
     const carts = await Cart.find({ _id: { $in: cartIds } });
 
     res.status(201).json({ orders: orderDocument.orders, carts });
