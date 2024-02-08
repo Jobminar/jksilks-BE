@@ -92,6 +92,7 @@ router.get(
   "/get-payment-status-orders",
   OrderController.getPaymentStatusOrders
 );
+router.post("/orders/previous", OrderController.getPreviousOrders);
 // Get cart by cartId
 router.get("/carts/:cartId", OrderController.getCartById);
 

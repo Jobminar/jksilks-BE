@@ -54,6 +54,7 @@ const createOrder = async (req, res) => {
       totalAmount,
       payment,
       orderStatus,
+      createdAt: new Date(), // Add the current date
     };
 
     orderDocument.orders.push(orderWithAddress);
@@ -253,6 +254,47 @@ const getUserById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const getPreviousOrders = async (req, res) => {
+  const { userId, currentDate } = req.body;
+
+  try {
+    const orderDocument = await Order.findOne({ userId });
+
+    if (!orderDocument) {
+      return res
+        .status(404)
+        .json({ error: "User not found or no orders available" });
+    }
+
+    // Extract cartIds and addressId from each order
+    const { orders } = orderDocument;
+
+    // Filter orders based on current date
+    const previousOrders = orders.filter((order) => {
+      const orderDate = new Date(order.createdAt);
+      return orderDate < new Date(currentDate);
+    });
+
+    const cartIds = previousOrders.map((order) => order.cartIds).flat();
+    const addressIds = previousOrders
+      .map((order) => order.orders.map((order) => order.addressId))
+      .flat();
+
+    // Retrieve complete carts and addresses docs
+    const carts = await Cart.find({ _id: { $in: cartIds } }).populate({
+      path: "items.productId",
+      select:
+        "userId category itemname price code stitchingOptions fabric washCare length description itemImage1 quantity itemId",
+    });
+
+    const addresses = await Address.find({ _id: { $in: addressIds } });
+
+    res.status(200).json({ previousOrders, carts, addresses });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 export default {
   createOrder,
   getOrdersByUserId,
@@ -264,4 +306,5 @@ export default {
   getCartById,
   getAddressById,
   getUserById,
+  getPreviousOrders,
 };
