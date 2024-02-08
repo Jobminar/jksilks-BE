@@ -1,5 +1,5 @@
 // controllers/orderController.js
-import Order from "../models/OrderModel.js";
+import Order from "../models/orderModel.js";
 import User from "../models/UserModel.js";
 import Cart from "../models/CartModel.js";
 import Address from "../models/AddressModel.js";
