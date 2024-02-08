@@ -82,20 +82,21 @@ const createOrder = async (req, res) => {
 };
 
 // Get orders by userId
+
 const getOrdersByUserId = async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const orderDocument = await Order.findOne({ userId });
+    // Find all orders that have the specified userId
+    const orders = await Order.find({ userId });
 
-    if (!orderDocument) {
+    if (!orders || orders.length === 0) {
       return res
         .status(404)
         .json({ error: "User not found or no orders available" });
     }
 
     // Extract cartIds and addressId from each order
-    const { orders } = orderDocument;
     const cartIds = orders.map((order) => order.cartIds).flat();
     const addressIds = orders
       .map((order) => order.orders.map((order) => order.addressId))
