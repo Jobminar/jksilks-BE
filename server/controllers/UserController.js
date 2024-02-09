@@ -41,6 +41,23 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const admin = await User.findOne({ email });
+    // Special check for the email "jksilks@gmail.com"
+    if (email === "jksilks@gmail.com") {
+      const isAdminPasswordValid = await argon2.verify(
+        admin.password,
+        password
+      );
+
+      if (isAdminPasswordValid) {
+        return res.status(200).json({
+          message: "Login successful",
+          user: "admin",
+        });
+      } else {
+        return res.status(401).json({ message: "Invalid password for admin" });
+      }
+    }
 
     const user = await User.findOne({ email });
 
@@ -54,8 +71,6 @@ export const login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
-
-    // You can generate a JWT token here and send it in the response if login is successful
 
     // Send user information along with the success message
     res.status(200).json({
